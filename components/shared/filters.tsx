@@ -12,6 +12,11 @@ interface Props {
 	className?: string
 }
 
+enum PriceChangeOptions {
+	PRICE_FROM = 'priceFrom',
+	PRICE_TO = 'priceTo',
+}
+
 export const Filters: React.FC<Props> = ({ className }) => {
 	const { ingredients, loading } = useIngredients()
 	const filters = useFilters()
@@ -23,9 +28,19 @@ export const Filters: React.FC<Props> = ({ className }) => {
 		value: String(item.id),
 	}))
 
-	const updatePrices = (prices: number[]) => {
-		filters.setPrices('priceFrom', prices[0])
-		filters.setPrices('priceTo', prices[1])
+	const onPriceChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		option: PriceChangeOptions
+	) => {
+		if (e.target.valueAsNumber > 1000) {
+			e.target.value = '1000'
+		}
+		filters.setPrices(option, e.target.valueAsNumber)
+	}
+
+	const updatePrices = ([priceFrom, priceTo]: number[]) => {
+		filters.setPrices(PriceChangeOptions.PRICE_FROM, priceFrom)
+		filters.setPrices(PriceChangeOptions.PRICE_TO, priceTo)
 	}
 
 	return (
@@ -63,9 +78,7 @@ export const Filters: React.FC<Props> = ({ className }) => {
 						min={0}
 						max={1000}
 						value={String(filters.prices.priceFrom)}
-						onChange={e =>
-							filters.setPrices('priceFrom', Number(e.target.value))
-						}
+						onChange={e => onPriceChange(e, PriceChangeOptions.PRICE_FROM)}
 					/>
 					<Input
 						type='number'
@@ -73,7 +86,7 @@ export const Filters: React.FC<Props> = ({ className }) => {
 						min={100}
 						max={1000}
 						value={String(filters.prices.priceTo)}
-						onChange={e => filters.setPrices('priceTo', Number(e.target.value))}
+						onChange={e => onPriceChange(e, PriceChangeOptions.PRICE_TO)}
 					/>
 				</div>
 				<RangeSlider
