@@ -12,7 +12,7 @@ type Props = {
 
 export const Header: React.FC<Props> = ({ className }) => {
 	return (
-		<div className={cn('border border-b', className)}>
+		<header className={cn('border border-b', className)}>
 			<Container className='flex items-center justify-between py-8'>
 				<Link href='/'>
 					<div className='flex items-center gap-4'>
@@ -51,6 +51,6 @@ export const Header: React.FC<Props> = ({ className }) => {
 					</div>
 				</div>
 			</Container>
-		</div>
+		</header>
 	)
 }

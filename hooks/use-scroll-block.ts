@@ -1,25 +1,26 @@
-import { useRef } from 'react'
+'use client'
 
-const safeDocument: Document = document
+import { useRef } from 'react';
+
+const safeDocument: Document = document;
 
 /**
  * Usage:
  * const [blockScroll, allowScroll] = useScrollBlock();
  */
 export const useScrollBlock = (): [() => void, () => void] => {
-	const scrollBlocked = useRef(false)
-	const html = safeDocument.documentElement
-	const { body } = safeDocument
+	const scrollBlocked = useRef(false);
+	const html = safeDocument?.documentElement;
+	const { body } = safeDocument;
 
 	const blockScroll = (): void => {
-		if (!body || !body.style || scrollBlocked.current) return
-		if (document == undefined) return
+		if (!body || !body.style || scrollBlocked.current) 
+            return;
+        if (document == undefined)
+            return;
 
-		const scrollBarWidth = window.innerWidth - html.clientWidth
-		const bodyPaddingRight =
-			parseInt(
-				window.getComputedStyle(body).getPropertyValue('padding-right')
-			) || 0
+		const scrollBarWidth = window.innerWidth - html.clientWidth;
+		const bodyPaddingRight = parseInt(window.getComputedStyle(body).getPropertyValue('padding-right')) || 0;
 
 		/**
 		 * 1. Fixes a bug in iOS and desktop Safari whereby setting
@@ -27,26 +28,26 @@ export const useScrollBlock = (): [() => void, () => void] => {
 		 * 2. Fixes a bug in desktop Safari where `overflowY` does not prevent
 		 *    scroll if an `overflow-x` style is also applied to the body.
 		 */
-		html.style.position = 'relative' /* [1] */
-		html.style.overflow = 'hidden' /* [2] */
-		body.style.position = 'relative' /* [1] */
-		body.style.overflow = 'hidden' /* [2] */
-		body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`
+		html.style.position = 'relative'; /* [1] */
+		html.style.overflow = 'hidden'; /* [2] */
+		body.style.position = 'relative'; /* [1] */
+		body.style.overflow = 'hidden'; /* [2] */
+		body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
 
-		scrollBlocked.current = true
-	}
+		scrollBlocked.current = true;
+	};
 
 	const allowScroll = (): void => {
-		if (!body || !body.style || !scrollBlocked.current) return
+		if (!body || !body.style || !scrollBlocked.current) return;
 
-		html.style.position = ''
-		html.style.overflow = ''
-		body.style.position = ''
-		body.style.overflow = ''
-		body.style.paddingRight = ''
+		html.style.position = '';
+		html.style.overflow = '';
+		body.style.position = '';
+		body.style.overflow = '';
+		body.style.paddingRight = '';
 
-		scrollBlocked.current = false
-	}
+		scrollBlocked.current = false;
+	};
 
-	return [blockScroll, allowScroll]
-}
+	return [blockScroll, allowScroll];
+};

@@ -126,6 +126,16 @@ export const products = [
     categoryId: 2,
   },
   {
+    name: 'Сырники со сгущенным молоком',
+    imageUrl: 'https://media.dodostatic.net/image/r:584x584/11EE7D61879CB2DCAF5DBBAC64914550.avif',
+    categoryId: 2,
+  },
+  {
+    name: 'Сырники с малиновым вареньем 👶',
+    imageUrl: 'https://media.dodostatic.net/image/r:584x584/11EE7D61B7DE873C82A72DB3BE601BD4.avif',
+    categoryId: 2,
+  },
+  {
     name: 'Дэнвич ветчина и сыр',
     imageUrl: 'https://media.dodostatic.net/image/r:292x292/11EE796FF0059B799A17F57A9E64C725.webp',
     categoryId: 3,

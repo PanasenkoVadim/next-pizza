@@ -173,6 +173,8 @@ async function up() {
 			{ productId: 15, price: randomNumber(190, 600) },
 			{ productId: 16, price: randomNumber(190, 600) },
 			{ productId: 17, price: randomNumber(190, 600) },
+			{ productId: 18, price: randomNumber(190, 600) },
+			{ productId: 19, price: randomNumber(190, 600) },
 		],
 	})
 
