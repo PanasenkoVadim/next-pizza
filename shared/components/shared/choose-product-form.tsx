@@ -10,7 +10,6 @@ import { cn } from '@/shared/lib/utils'
 interface Props {
 	imageUrl: string
 	name: string
-	items?: ProductItem[]
 	onClickAdd?: VoidFunction
 	className?: string
 }
