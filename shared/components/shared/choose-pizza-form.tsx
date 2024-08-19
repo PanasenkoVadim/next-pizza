@@ -54,13 +54,13 @@ export const ChoosePizzaForm: React.FC<Props> = ({
 	)
 
 	const handleClickAdd = () => {
-		onClickAddCart?.()
-		console.log({
-			size,
-			type,
-			ingredients: Array.from(selectedIngredients),
-			totalPrice,
-		})
+		// onClickAddCart?.()
+		// console.log({
+		// 	size,
+		// 	type,
+		// 	ingredients: Array.from(selectedIngredients),
+		// 	totalPrice,
+		// })
 	}
 
 	return (

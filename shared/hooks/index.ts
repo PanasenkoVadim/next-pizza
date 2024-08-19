@@ -1,2 +1,2 @@
 export { usePizzaOptions } from './use-pizza-options'
-// export { useCart } from './use-cart'
+export { useCart } from './use-cart'
