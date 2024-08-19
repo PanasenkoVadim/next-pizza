@@ -29,7 +29,6 @@ export async function GET(req: NextRequest) {
 				},
 			},
 		})
-		console.log(userCart)
 		return NextResponse.json(userCart)
 	} catch (error) {
 		console.log(error)
