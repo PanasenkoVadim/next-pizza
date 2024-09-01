@@ -16,13 +16,13 @@ interface Props {
 export const SearchInput: React.FC<Props> = ({ className }) => {
 	const [searchQuery, setSearchQuery] = React.useState('')
 	const [focused, setFocused] = React.useState(false)
-	const [blockScroll, allowScroll] = useScrollBlock()
+	// const [blockScroll, allowScroll] = useScrollBlock()
 	const [products, setProducts] = React.useState<Product[]>([])
 	const ref = React.useRef(null)
 
 	useClickAway(ref, () => {
 		setFocused(false)
-		allowScroll()
+		// allowScroll()
 	})
 
 	useDebounce(
@@ -40,14 +40,14 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
 
 	const onSearchFocus = () => {
 		setFocused(true)
-		blockScroll()
+		// blockScroll()
 	}
 
 	const onClickItem = () => {
 		setFocused(false)
 		setSearchQuery('')
 		setProducts([])
-		allowScroll()
+		// allowScroll()
 	}
 
 	return (
