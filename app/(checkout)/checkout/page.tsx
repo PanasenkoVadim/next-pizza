@@ -4,17 +4,32 @@ import {
 	CheckoutItem,
 	CheckoutSidebar,
 	Container,
+	FormInput,
 	Title,
 	WhiteBlock,
 } from '@/shared/components/shared'
+import { FormProvider, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Input, Textarea } from '@/shared/components/ui'
 import { PizzaSize, PizzaType } from '@/shared/constants/pizza'
 import { useCart } from '@/shared/hooks'
 import { getCartItemDetails } from '@/shared/lib'
 import { Trash2Icon } from 'lucide-react'
 
-export default function page() {
+export default function CheckoutPage() {
 	const { totalAmount, updateItemQuantity, items, removeCartItem } = useCart()
+
+	const form = useForm({
+		resolver: zodResolver(),
+		defaultValues: {
+			email: '',
+			firstname: '',
+			lastname: '',
+			phone: '',
+			address: '',
+			comment: '',
+		},
+	})
 
 	const onClickCountButton = (
 		id: number,
@@ -88,9 +103,9 @@ export default function page() {
 								name='firstname'
 								placeholder='E-Mail'
 							/>
-							<Input
+							<FormInput
 								className='text-base'
-								name='firstname'
+								name='phone'
 								placeholder='Телефон'
 							/>
 						</div>
