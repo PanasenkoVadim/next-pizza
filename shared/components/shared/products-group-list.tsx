@@ -1,15 +1,16 @@
 'use client'
 
+import { ProductWithRelations } from '@/@types/prisma'
+import { cn } from '@/shared/lib/utils'
+import { useCategoryStore } from '@/shared/store'
 import React from 'react'
+import { useIntersection } from 'react-use'
 import { ProductCard } from './product-card'
 import { Title } from './title'
-import { cn } from '@/shared/lib/utils'
-import { useIntersection } from 'react-use'
-import { useCategoryStore } from '@/shared/store'
 
 interface Props {
 	title: string
-	items: any[]
+	items: ProductWithRelations[]
 	categoryId: number
 	className?: string
 	listClassName?: string
@@ -35,7 +36,11 @@ export const ProductsGroupList: React.FC<Props> = ({
 	}, [categoryId, intersection?.isIntersecting, title])
 
 	return (
-		<div className={cn(className, 'pt-[100px] mt-[-100px]')} ref={intersectionRef} id={title}>
+		<div
+			className={cn(className, 'pt-[100px] mt-[-100px]')}
+			ref={intersectionRef}
+			id={title}
+		>
 			<Title text={title} size='lg' className='font-extrabold mb-5' />
 
 			<div className={cn('grid grid-cols-3 gap-[50px]', listClassName)}>

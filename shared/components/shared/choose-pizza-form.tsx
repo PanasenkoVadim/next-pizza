@@ -53,7 +53,6 @@ export const ChoosePizzaForm: React.FC<Props> = ({
 	)
 
 	const handleClickAdd = () => {
-		console.log(typeof onSubmit)
 		if (currentItemId) {
 			onSubmit(currentItemId, Array.from(selectedIngredients))
 		}
