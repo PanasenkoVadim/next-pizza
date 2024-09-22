@@ -1,36 +1,30 @@
 'use client'
 
 import {
-	CheckoutItem,
+	CheckoutCart,
 	CheckoutSidebar,
 	Container,
 	FormInput,
 	Title,
 	WhiteBlock,
 } from '@/shared/components/shared'
-import { FormProvider, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Input, Textarea } from '@/shared/components/ui'
-import { PizzaSize, PizzaType } from '@/shared/constants/pizza'
 import { useCart } from '@/shared/hooks'
-import { getCartItemDetails } from '@/shared/lib'
-import { Trash2Icon } from 'lucide-react'
 
 export default function CheckoutPage() {
 	const { totalAmount, updateItemQuantity, items, removeCartItem } = useCart()
 
-	const form = useForm({
-		resolver: zodResolver(),
-		defaultValues: {
-			email: '',
-			firstname: '',
-			lastname: '',
-			phone: '',
-			address: '',
-			comment: '',
-		},
-	})
-
+	// const form = useForm({
+	// 	resolver: zodResolver(),
+	// 	defaultValues: {
+	// 		email: '',
+	// 		firstname: '',
+	// 		lastname: '',
+	// 		phone: '',
+	// 		address: '',
+	// 		comment: '',
+	// 	},
+	// })
 	const onClickCountButton = (
 		id: number,
 		quantity: number,
@@ -48,57 +42,25 @@ export default function CheckoutPage() {
 			/>
 			<div className='flex gap-10 mb-20'>
 				<div className='flex flex-1 flex-col gap-10'>
-					<WhiteBlock
-						title='1. Корзина'
-						endAdornment={
-							totalAmount > 0 && (
-								<button>
-									<div className='flex items-center gap-1 text-[#9ca3af]'>
-										<Trash2Icon
-											// onClick={() => {}}
-											className='text-gray-400 cursor-pointer hover:text-gray-600'
-											size={16}
-										/>
-										Очистить корзину
-									</div>
-								</button>
-							)
-						}
-					>
-						<div className=''>
-							{items.length > 0 &&
-								items.map(item => (
-									<CheckoutItem
-										key={item.id}
-										id={item.id}
-										imageUrl={item.imageUrl}
-										name={item.name}
-										disabled={item.disabled}
-										details={getCartItemDetails(
-											item.ingredients,
-											item.pizzaSize as PizzaSize,
-											item.pizzaType as PizzaType
-										)}
-										price={item.price}
-										quantity={item.quantity}
-										className='mb-4'
-										onClickCountButton={type =>
-											onClickCountButton(item.id, item.quantity, type)
-										}
-										onClickRemove={() => removeCartItem(item.id)}
-									/>
-								))}
-						</div>
-					</WhiteBlock>
+					<CheckoutCart
+						items={items}
+						totalAmount={totalAmount}
+						onClickCountButton={onClickCountButton}
+						removeCartItem={removeCartItem}
+					/>
 					<WhiteBlock title='2. Персональные данные'>
 						<div className='grid grid-cols-2 gap-5'>
-							<Input className='text-base' name='firstname' placeholder='Имя' />
-							<Input
+							<FormInput
+								className='text-base'
+								name='firstname'
+								placeholder='Имя'
+							/>
+							<FormInput
 								className='text-base'
 								name='lastname'
 								placeholder='Фамилия'
 							/>
-							<Input
+							<FormInput
 								className='text-base'
 								name='firstname'
 								placeholder='E-Mail'

@@ -15,7 +15,7 @@ export const FormInput: React.FC<Props> = ({
 	required,
 	...props
 }) => {
-	let errorText = 'Ошибка'
+	let errorText = ''
 	return (
 		<div className={className}>
 			{label && (
