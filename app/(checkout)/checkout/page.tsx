@@ -7,17 +7,17 @@ import {
 	CheckoutSidebar,
 	Container,
 	Title,
-} from '@/shared/components/shared'
+} from '@/shared/components'
 import {
 	CheckoutFormValues,
 	checkoutFormSchema,
-} from '@/shared/components/shared/checkout/schemas/checkout-form-schema'
+} from '@/shared/constants'
 import { useCart } from '@/shared/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormProvider, useForm } from 'react-hook-form'
 
 export default function CheckoutPage() {
-	const { totalAmount, updateItemQuantity, items, removeCartItem } = useCart()
+	const { totalAmount, updateItemQuantity, items, removeCartItem, loading } = useCart()
 
 	const form = useForm<CheckoutFormValues>({
 		resolver: zodResolver(checkoutFormSchema),
@@ -63,7 +63,7 @@ export default function CheckoutPage() {
 							<CheckoutAddressForm />
 						</div>
 						<div className='w-[450px]'>
-							<CheckoutSidebar totalAmount={totalAmount} />
+							<CheckoutSidebar loading={loading} totalAmount={totalAmount} />
 						</div>
 					</div>
 				</form>

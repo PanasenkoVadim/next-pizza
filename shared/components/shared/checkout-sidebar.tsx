@@ -4,18 +4,20 @@ import { cn } from '@/shared/lib/utils'
 import { ArrowRight, Package, Percent, Truck } from 'lucide-react'
 import React from 'react'
 import { CheckoutItemDetails, WhiteBlock } from '.'
-import { Button } from '../ui'
+import { Button, Skeleton } from '../ui'
 
 const VAT = 7
 const DELIVERY_PRICE = 150
 
 interface Props {
 	totalAmount: number
+	loading?: boolean
 	className?: string
 }
 
 export const CheckoutSidebar: React.FC<Props> = ({
 	totalAmount,
+	loading,
 	className,
 }) => {
 	const vatPrice = (totalAmount * VAT) / 100
@@ -24,7 +26,13 @@ export const CheckoutSidebar: React.FC<Props> = ({
 		<WhiteBlock className={cn('p-6 sticky top-4', className)}>
 			<div className='flex flex-col gap-1'>
 				<span className='text-xl'>Итого:</span>
-				<span className='h-11 text-[34px] font-extrabold'>{totalPrice} ₽</span>
+				{loading ? (
+					<Skeleton className='w-30 h-11' />
+				) : (
+					<span className='h-11 text-[34px] font-extrabold'>
+						{totalPrice} ₽
+					</span>
+				)}
 			</div>
 			<CheckoutItemDetails
 				title={

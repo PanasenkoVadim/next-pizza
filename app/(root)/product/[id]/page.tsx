@@ -4,7 +4,7 @@ import {
 	ChooseProductForm,
 	Container,
 	ProductForm,
-} from '@/shared/components/shared'
+} from '@/shared/components'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 

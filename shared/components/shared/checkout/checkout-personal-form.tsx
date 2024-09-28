@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormInput, WhiteBlock } from '..'
+import { FormInput, WhiteBlock, FormInputMask } from '..'
 
 type Props = {
 	className?: string
@@ -15,12 +15,14 @@ export const CheckoutPersonalForm: React.FC<Props> = ({ className }) => {
 					name='lastname'
 					placeholder='Фамилия'
 				/>
-				<FormInput
-					className='text-base'
-					name='email'
-					placeholder='E-Mail'
-				/>
+				<FormInput className='text-base' name='email' placeholder='E-Mail' />
 				<FormInput className='text-base' name='phone' placeholder='Телефон' />
+				{/* <FormInputMask
+					mask={'{+7} (000) 000-00-00'}
+					className='text-base'
+					name='phone'
+					placeholder='Телефон'
+				/> */}
 			</div>
 		</WhiteBlock>
 	)
