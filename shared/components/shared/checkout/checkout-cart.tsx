@@ -1,5 +1,5 @@
 import React from 'react'
-import { CheckoutItem, WhiteBlock } from '..'
+import { CheckoutItem, CheckoutItemSkeleton, WhiteBlock } from '..'
 import { Trash2Icon } from 'lucide-react'
 import { CartStateItem } from '@/shared/lib/get-cart-details'
 import { PizzaSize, PizzaType } from '@/shared/constants/pizza'
@@ -9,6 +9,7 @@ type Props = {
 	items: CartStateItem[]
 	totalAmount: number
 	className?: string
+	loading?: boolean
 	onClickCountButton: (
 		id: number,
 		quantity: number,
@@ -20,6 +21,7 @@ type Props = {
 export const CheckoutCart: React.FC<Props> = ({
 	className,
 	totalAmount,
+	loading,
 	onClickCountButton,
 	removeCartItem,
 	items,
@@ -43,29 +45,31 @@ export const CheckoutCart: React.FC<Props> = ({
 				)
 			}
 		>
-			<div className=''>
-				{items.length > 0 &&
-					items.map(item => (
-						<CheckoutItem
-							key={item.id}
-							id={item.id}
-							imageUrl={item.imageUrl}
-							name={item.name}
-							disabled={item.disabled}
-							details={getCartItemDetails(
-								item.ingredients,
-								item.pizzaSize as PizzaSize,
-								item.pizzaType as PizzaType
-							)}
-							price={item.price}
-							quantity={item.quantity}
-							className='mb-4'
-							onClickCountButton={type =>
-								onClickCountButton(item.id, item.quantity, type)
-							}
-							onClickRemove={() => removeCartItem(item.id)}
-						/>
-					))}
+			<div className='flex flex-col gap-4'>
+				{loading
+					? [...Array(3)].map((_, key) => (
+							<CheckoutItemSkeleton key={key} />
+					  ))
+					: items.map(item => (
+							<CheckoutItem
+								key={item.id}
+								id={item.id}
+								imageUrl={item.imageUrl}
+								name={item.name}
+								disabled={item.disabled}
+								details={getCartItemDetails(
+									item.ingredients,
+									item.pizzaSize as PizzaSize,
+									item.pizzaType as PizzaType
+								)}
+								price={item.price}
+								quantity={item.quantity}
+								onClickCountButton={type =>
+									onClickCountButton(item.id, item.quantity, type)
+								}
+								onClickRemove={() => removeCartItem(item.id)}
+							/>
+					  ))}
 			</div>
 		</WhiteBlock>
 	)

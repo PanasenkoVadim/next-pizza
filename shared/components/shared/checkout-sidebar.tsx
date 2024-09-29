@@ -62,7 +62,7 @@ export const CheckoutSidebar: React.FC<Props> = ({
 				value={`${DELIVERY_PRICE} ₽`}
 			/>
 			<Button
-				loading={false}
+				loading={loading}
 				type='submit'
 				className='w-full h-14 rounded-2xl mt-6 text-base font-bold'
 			>

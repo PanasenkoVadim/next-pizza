@@ -1,5 +1,6 @@
 'use client'
 
+import { createOrder } from '@/app/actions'
 import {
 	CheckoutAddressForm,
 	CheckoutCart,
@@ -8,16 +9,17 @@ import {
 	Container,
 	Title,
 } from '@/shared/components'
-import {
-	CheckoutFormValues,
-	checkoutFormSchema,
-} from '@/shared/constants'
+import { CheckoutFormValues, checkoutFormSchema } from '@/shared/constants'
 import { useCart } from '@/shared/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
+import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
 export default function CheckoutPage() {
-	const { totalAmount, updateItemQuantity, items, removeCartItem, loading } = useCart()
+	const [submitting, setSubmitting] = React.useState(false)
+	const { totalAmount, updateItemQuantity, items, removeCartItem, loading } =
+		useCart()
 
 	const form = useForm<CheckoutFormValues>({
 		resolver: zodResolver(checkoutFormSchema),
@@ -31,8 +33,25 @@ export default function CheckoutPage() {
 		},
 	})
 
-	const onSubmit = (data: CheckoutFormValues) => {
-		console.log(data)
+	const onSubmit = async (data: CheckoutFormValues) => {
+		try {
+			setSubmitting(true)
+			const url = await createOrder(data)
+
+			toast.error('Заказ успешно оформлен! 📝 Переход на оплату... ', {
+				icon: '✅',
+			})
+
+			if (url) {
+				location.href = url
+			}
+		} catch (err) {
+			console.log(err)
+			setSubmitting(false)
+			toast.error('Не удалось создать заказ', {
+				icon: '❌',
+			})
+		}
 	}
 	const onClickCountButton = (
 		id: number,
@@ -56,6 +75,7 @@ export default function CheckoutPage() {
 							<CheckoutCart
 								items={items}
 								totalAmount={totalAmount}
+								loading={loading}
 								onClickCountButton={onClickCountButton}
 								removeCartItem={removeCartItem}
 							/>
@@ -63,7 +83,10 @@ export default function CheckoutPage() {
 							<CheckoutAddressForm />
 						</div>
 						<div className='w-[450px]'>
-							<CheckoutSidebar loading={loading} totalAmount={totalAmount} />
+							<CheckoutSidebar
+								loading={loading || submitting}
+								totalAmount={totalAmount}
+							/>
 						</div>
 					</div>
 				</form>
