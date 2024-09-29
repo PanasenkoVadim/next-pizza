@@ -3,113 +3,113 @@
 import { prisma } from '@/prisma/prisma-client'
 import { PayOrderTemplate } from '@/shared/components'
 import { CheckoutFormValues } from '@/shared/constants'
-import { sendEmail } from '@/shared/lib/send-email'
+import { sendEmail, createPayment } from '@/shared/lib'
 import { OrderStatus } from '@prisma/client'
 import { cookies } from 'next/headers'
 
 export async function createOrder(data: CheckoutFormValues) {
-try {
-	const cookieStore = cookies();
-    const cartToken = cookieStore.get('cartToken')?.value;
+	try {
+		const cookieStore = cookies()
+		const cartToken = cookieStore.get('cartToken')?.value
 
-    if (!cartToken) {
-      throw new Error('Cart token not found');
-    }
+		if (!cartToken) {
+			throw new Error('Cart token not found')
+		}
 
-    /* Находим корзину по токену */
-    const userCart = await prisma.cart.findFirst({
-      include: {
-        user: true,
-        items: {
-          include: {
-            ingredients: true,
-            productItem: {
-              include: {
-                product: true,
-              },
-            },
-          },
-        },
-      },
-      where: {
-        token: cartToken,
-      },
-    });
+		/* Находим корзину по токену */
+		const userCart = await prisma.cart.findFirst({
+			include: {
+				user: true,
+				items: {
+					include: {
+						ingredients: true,
+						productItem: {
+							include: {
+								product: true,
+							},
+						},
+					},
+				},
+			},
+			where: {
+				token: cartToken,
+			},
+		})
 
-    /* Если корзина не найдена возращаем ошибку */
-    if (!userCart) {
-      throw new Error('Cart not found');
-    }
+		/* Если корзина не найдена возращаем ошибку */
+		if (!userCart) {
+			throw new Error('Cart not found')
+		}
 
-    /* Если корзина пустая возращаем ошибку */
-    if (userCart?.totalAmount === 0) {
-      throw new Error('Cart is empty');
-    }
+		/* Если корзина пустая возращаем ошибку */
+		if (userCart?.totalAmount === 0) {
+			throw new Error('Cart is empty')
+		}
 
-    /* Создаем заказ */
-    const order = await prisma.order.create({
-      data: {
-        token: cartToken,
-        fullName: data.lastname + ' ' + data.lastname,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        comment: data.comment,
-        totalAmount: userCart.totalAmount,
-        status: OrderStatus.PENDING,
-        items: JSON.stringify(userCart.items),
-      },
-    });
+		/* Создаем заказ */
+		const order = await prisma.order.create({
+			data: {
+				token: cartToken,
+				fullName: data.lastname + ' ' + data.lastname,
+				email: data.email,
+				phone: data.phone,
+				address: data.address,
+				comment: data.comment,
+				totalAmount: userCart.totalAmount,
+				status: OrderStatus.PENDING,
+				items: JSON.stringify(userCart.items),
+			},
+		})
 
-    /* Очищаем корзину */
-    await prisma.cart.update({
-      where: {
-        id: userCart.id,
-      },
-      data: {
-        totalAmount: 0,
-      },
-    });
+		/* Очищаем корзину */
+		await prisma.cart.update({
+			where: {
+				id: userCart.id,
+			},
+			data: {
+				totalAmount: 0,
+			},
+		})
 
-    await prisma.cartItem.deleteMany({
-      where: {
-        cartId: userCart.id,
-      },
-    });
+		await prisma.cartItem.deleteMany({
+			where: {
+				cartId: userCart.id,
+			},
+		})
 
-    // const paymentData = await createPayment({
-    //   amount: order.totalAmount,
-    //   orderId: order.id,
-    //   description: 'Оплата заказа #' + order.id,
-    // });
+		const paymentData = await createPayment({
+			amount: order.totalAmount,
+			orderId: order.id,
+			description: 'Оплата заказа #' + order.id,
+		})
 
-    // if (!paymentData) {
-    //   throw new Error('Payment data not found');
-    // }
+		if (!paymentData) {
+		  throw new Error('Payment data not found');
+		}
 
-    // await prisma.order.update({
-    //   where: {
-    //     id: order.id,
-    //   },
-    //   data: {
-    //     paymentId: paymentData.id,
-    //   },
-    // });
+		await prisma.order.update({
+		  where: {
+		    id: order.id,
+		  },
+		  data: {
+		    paymentId: paymentData.id,
+		  },
+		});
 
-    // const paymentUrl = paymentData.confirmation.confirmation_url;
+		const paymentUrl = paymentData.confirmation.confirmation_url;
 
-    await sendEmail(
-      data.email,
-      'Next Pizza / Оплатите заказ #' + order.id,
-      PayOrderTemplate({
-        orderId: order.id,
-        totalAmount: order.totalAmount,
-        paymentUrl: "",
-      }),
-    );
+		await sendEmail(
+			data.email,
+			'Next Pizza / Оплатите заказ #' + order.id,
+			PayOrderTemplate({
+				orderId: order.id,
+				totalAmount: order.totalAmount,
+				paymentUrl,
+			})
+		)
 
-    return "paymentUrl";
-  } catch (err) {
-    console.log('[CreateOrder] Server error', err);
-  }
+		return paymentUrl
+	} catch (err) {
+		console.log('[CreateOrder] Server error', err)
+	}
 }
