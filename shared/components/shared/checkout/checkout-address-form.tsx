@@ -1,8 +1,9 @@
+'use client'
+
 import React from 'react'
 import {
 	AddressInput,
 	ErrorText,
-	FormInput,
 	FormTextarea,
 	WhiteBlock,
 } from '..'

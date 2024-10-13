@@ -1,10 +1,13 @@
+'use client'
+
 import { cn } from '@/shared/lib/utils'
-import { User } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { CartButton, SearchInput } from '.'
-import { Button } from '../ui'
+import { CartButton, ProfileButton, SearchInput } from '.'
 import { Container } from './container'
+import { useEffect } from 'react'
+import toast from 'react-hot-toast'
+import { useSearchParams } from 'next/navigation'
 
 type Props = {
 	hasSearch?: boolean
@@ -17,6 +20,27 @@ export const Header: React.FC<Props> = ({
 	hasCart = true,
 	className,
 }) => {
+	const searchParams = useSearchParams()
+
+	useEffect(() => {
+		let toastMessage = ''
+
+		if (searchParams.has('paid')) {
+			toastMessage = 'Заказ успешно оплачен! Информация отправлена на почту.'
+		}
+
+		// if (searchParams.has('verified')) {
+		// 	toastMessage = 'Почта успешно подтверждена!'
+		// }
+
+		if (toastMessage) {
+			setTimeout(() => {
+				toast.success(toastMessage, {
+					duration: 3000,
+				})
+			}, 1000)
+		}
+	}, [])
 	return (
 		<header className={cn('border-b', className)}>
 			<Container className='flex items-center justify-between py-8'>
@@ -38,10 +62,7 @@ export const Header: React.FC<Props> = ({
 				)}
 
 				<div className='flex items-center gap-3'>
-					<Button variant='outline' className='flex items-center gap-1'>
-						<User size={16} />
-						Войти
-					</Button>
+					<ProfileButton />
 					{hasCart && (
 						<div>
 							<CartButton />
