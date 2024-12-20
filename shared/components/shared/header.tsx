@@ -3,9 +3,9 @@
 import { cn } from '@/shared/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import { CartButton, ProfileButton, SearchInput } from '.'
+import { AuthModal, CartButton, ProfileButton, SearchInput } from '.'
 import { Container } from './container'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useSearchParams } from 'next/navigation'
 
@@ -20,6 +20,7 @@ export const Header: React.FC<Props> = ({
 	hasCart = true,
 	className,
 }) => {
+	const [openAuthModal, setOpenAuthModal] = useState(false)
 	const searchParams = useSearchParams()
 
 	useEffect(() => {
@@ -62,7 +63,11 @@ export const Header: React.FC<Props> = ({
 				)}
 
 				<div className='flex items-center gap-3'>
-					<ProfileButton />
+					<AuthModal
+						open={openAuthModal}
+						onClose={() => setOpenAuthModal(false)}
+					/>
+					<ProfileButton onClickSignIn={() => setOpenAuthModal(true)} />
 					{hasCart && (
 						<div>
 							<CartButton />
