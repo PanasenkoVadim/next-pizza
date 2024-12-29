@@ -7,7 +7,7 @@ import { AuthModal, CartButton, ProfileButton, SearchInput } from '.'
 import { Container } from './container'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 type Props = {
 	hasSearch?: boolean
@@ -22,6 +22,7 @@ export const Header: React.FC<Props> = ({
 }) => {
 	const [openAuthModal, setOpenAuthModal] = useState(false)
 	const searchParams = useSearchParams()
+	const router = useRouter()
 
 	useEffect(() => {
 		let toastMessage = ''
@@ -30,12 +31,13 @@ export const Header: React.FC<Props> = ({
 			toastMessage = 'Заказ успешно оплачен! Информация отправлена на почту.'
 		}
 
-		// if (searchParams.has('verified')) {
-		// 	toastMessage = 'Почта успешно подтверждена!'
-		// }
+		if (searchParams.has('verified')) {
+			toastMessage = 'Почта успешно подтверждена!'
+		}
 
 		if (toastMessage) {
 			setTimeout(() => {
+				router.replace('/')
 				toast.success(toastMessage, {
 					duration: 3000,
 				})

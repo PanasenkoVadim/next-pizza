@@ -4,6 +4,7 @@ import {
 	TopBar,
 	Filters,
 	ProductsGroupList,
+	Stories,
 } from '@/shared/components'
 import { GetSearchParams, findPizzas } from '@/shared/lib/find-pizzas'
 import { Suspense } from 'react'
@@ -14,12 +15,13 @@ export default async function Home({
 	searchParams: GetSearchParams
 }) {
 	const categories = await findPizzas(searchParams)
-	
+
 	return (
 		<>
 			<Container>
 				<Title text='Все пиццы' size='lg' className='font-extrabold mt-10' />
 			</Container>
+			<Stories />
 			<TopBar
 				categories={categories.filter(category => category.products.length > 0)}
 			/>
